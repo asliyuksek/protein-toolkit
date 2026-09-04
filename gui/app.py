@@ -20,7 +20,9 @@ from tkinter import filedialog, messagebox, ttk
 from tkinter import font as tkfont
 from typing import Optional
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+_REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, _REPO_ROOT)
+LOGO_PATH = os.path.join(_REPO_ROOT, "protein_toolkit_logo.png")
 
 import matplotlib
 
@@ -242,6 +244,7 @@ class ProteinToolkitApp(tk.Tk):
         self._results_plaintext: str = ""
         self._results_rows: list = []
 
+        self._load_logo()
         self._init_fonts()
         self._init_style()
         self._build_menu()
@@ -251,6 +254,23 @@ class ProteinToolkitApp(tk.Tk):
         self.bind("<Command-Return>", lambda _e: self.calculate())
 
     # ---------- theming ----------
+
+    def _load_logo(self) -> None:
+        """Load the app logo, if present, as the window icon and a small
+        header image. Missing or unreadable file (older Tk without PNG
+        support) is non-fatal -- the app just runs without a logo."""
+        self.logo_header = None
+        try:
+            full = tk.PhotoImage(file=LOGO_PATH)
+        except tk.TclError:
+            return
+        self._logo_full = full  # keep a reference so Tk does not GC it
+        try:
+            self.iconphoto(True, full)
+        except tk.TclError:
+            pass
+        factor = max(1, full.height() // 56)
+        self.logo_header = full.subsample(factor, factor)
 
     def _init_fonts(self) -> None:
         self.font_ui = tkfont.nametofont("TkDefaultFont").copy()
@@ -361,8 +381,14 @@ class ProteinToolkitApp(tk.Tk):
         # --- header ---
         header = ttk.Frame(outer)
         header.grid(row=0, column=0, columnspan=2, sticky="ew", pady=(0, 12))
-        ttk.Label(header, text=APP_TITLE, style="Header.TLabel").pack(anchor="w")
-        ttk.Label(header, text=APP_SUBTITLE, style="Sub.TLabel").pack(anchor="w", pady=(2, 0))
+        if self.logo_header is not None:
+            ttk.Label(header, image=self.logo_header, background=BG).pack(
+                side="left", padx=(0, 12)
+            )
+        title_block = ttk.Frame(header)
+        title_block.pack(side="left", anchor="w")
+        ttk.Label(title_block, text=APP_TITLE, style="Header.TLabel").pack(anchor="w")
+        ttk.Label(title_block, text=APP_SUBTITLE, style="Sub.TLabel").pack(anchor="w", pady=(2, 0))
 
         # --- input panel ---
         input_frame = ttk.LabelFrame(

@@ -1,7 +1,13 @@
+<p align="center">
+  <img src="protein_toolkit_logo.png" alt="Protein Toolkit" width="320">
+</p>
+
 # Protein Toolkit
 
-A small, extensible desktop toolkit for protein property calculations —
-started as a portfolio project alongside my bioinformatics MSc work.
+A small, extensible toolkit for protein property calculations, with a
+desktop (Tkinter) and a web (Streamlit) front-end over shared
+calculation code — started as a portfolio project alongside my
+bioinformatics MSc work.
 
 ## Current status: Tier 1 — sequence-based calculator
 
@@ -67,9 +73,23 @@ sudo apt install python3-tk
 
 ## Running
 
+Desktop app (Tkinter):
+
 ```bash
 python run.py
 ```
+
+Web app (Streamlit) — same `core/` calculations, no Tkinter/Matplotlib:
+
+```bash
+streamlit run streamlit_app.py
+```
+
+To publish the web app: push to GitHub, create an app at
+[share.streamlit.io](https://share.streamlit.io) pointing at
+`streamlit_app.py`. To embed it in another site (e.g. Google Sites),
+append `?embed=true` to the deployed URL. Set `GITHUB_URL` at the top of
+`streamlit_app.py` to your repo.
 
 ## Running tests
 
@@ -121,8 +141,9 @@ protein_toolkit/
 │   ├── sequence_props.py     # physicochemical descriptors + batch runner
 │   ├── fasta.py              # multi-record FASTA parser
 │   └── uniprot.py            # fetch a sequence by accession (stdlib only)
-├── gui/                       # Tkinter interface
+├── gui/                       # Tkinter desktop interface
 │   └── app.py
+├── streamlit_app.py           # Streamlit web interface (reuses core/)
 ├── tests/
 │   ├── test_sequence_props.py
 │   ├── test_fasta.py
@@ -131,13 +152,14 @@ protein_toolkit/
 │   └── test_export.py
 ├── run.py
 ├── requirements.txt
+├── protein_toolkit_logo.png
 ├── LICENSE
 └── README.md
 ```
 
-Calculation logic is deliberately kept separate from the GUI so it can
-be reused later — e.g. wrapped in a CLI, or plugged into a Streamlit
-app — without touching the calculation code itself.
+Calculation logic is deliberately kept separate from the interface: the
+Tkinter desktop app and the Streamlit web app are two thin front-ends
+over the same `core/` functions.
 
 ## License
 
