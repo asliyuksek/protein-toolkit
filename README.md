@@ -4,12 +4,11 @@
 
 # Protein Toolkit
 
-A small, extensible toolkit for protein property calculations, with a
-desktop (Tkinter) and a web (Streamlit) front-end over shared
-calculation code — started as a portfolio project alongside my
-bioinformatics MSc work.
+A toolkit for calculating physicochemical properties of a protein from
+its amino acid sequence. It provides two front-ends over the same
+calculation code: a desktop app (Tkinter) and a web app (Streamlit).
 
-## Current status: Tier 1 — sequence-based calculator
+## What it does
 
 Paste a sequence, load a FASTA file, or **fetch by UniProt accession**
 (e.g. `P69905`) and get:
@@ -42,19 +41,6 @@ horizontally scrollable). **Export** writes exactly those rows and
 columns to `.xlsx` (centred cells) or `.csv`. Composition columns
 (`aa_percent_*`, `ss_*_pct`) are true percentages and all floats are
 rounded.
-
-## Roadmap
-
-- **Tier 2 — interface descriptors.** Given a homodimer/multimer PDB
-  structure, compute interface SASA, interface residue composition,
-  secondary structure at the interface, and a membrane-vs-soluble
-  classification via the OPM database. This extends the methodology
-  from my published work on homodimer interface geometry
-  (*J. Chem. Inf. Model.*, 2025).
-- **Tier 3 — binding pocket characterization.** Pocket detection and
-  descriptor calculation (volume, polarity, residue composition) on
-  predicted structures, extending my current MSc thesis work on
-  ML-based compound binding-site characterization.
 
 ## Installation
 

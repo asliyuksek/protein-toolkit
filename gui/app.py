@@ -1,14 +1,11 @@
 """
 gui/app.py
 
-Tkinter desktop GUI for the Protein Toolkit -- Tier 1: sequence-based
+Tkinter desktop GUI for the Protein Toolkit: a sequence-based protein
 property calculator.
 
-Structure-based modules (interface descriptors, binding-pocket
-characterization) are meant to be added later as additional tabs.
-See README.md for the roadmap. The calculation logic deliberately
-lives in core/sequence_props.py, not here, so it can be reused by a
-future CLI or web frontend without touching this file.
+The calculation logic lives in core/, not here, so it can be reused by
+the Streamlit front-end, a CLI, or a notebook without touching this file.
 """
 
 import csv
@@ -791,10 +788,8 @@ class ProteinToolkitApp(tk.Tk):
         messagebox.showinfo(
             "About",
             f"{APP_TITLE}\n{APP_SUBTITLE}\n\n"
-            "Tier 1 of a growing protein analysis toolkit.\n"
-            "Planned additions: an interface-descriptor module "
-            "(homodimer/multimer PDB analysis) and a binding-pocket "
-            "characterization module.\n\n"
+            "Calculates physicochemical properties of a protein from its "
+            "amino acid sequence.\n\n"
             "Built with Python, Biopython, Tkinter, and Matplotlib.",
         )
 
