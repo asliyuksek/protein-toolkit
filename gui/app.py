@@ -19,7 +19,7 @@ from typing import Optional
 
 _REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, _REPO_ROOT)
-LOGO_PATH = os.path.join(_REPO_ROOT, "protein_toolkit_logo.png")
+LOGO_PATH = os.path.join(_REPO_ROOT, "assets", "logo.png")
 
 import matplotlib
 

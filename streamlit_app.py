@@ -33,7 +33,7 @@ from core.uniprot import UniProtError, fetch_fasta
 
 GITHUB_URL = "https://github.com/<your-username>/protein_toolkit"
 
-_LOGO_PATH = Path(__file__).parent / "protein_toolkit_logo.png"
+_LOGO_PATH = Path(__file__).parent / "assets" / "logo.png"
 LOGO = str(_LOGO_PATH) if _LOGO_PATH.exists() else None
 
 st.set_page_config(

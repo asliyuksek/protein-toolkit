@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="protein_toolkit_logo.png" alt="Protein Toolkit" width="320">
+  <img src="assets/logo.png" alt="Protein Toolkit" width="320">
 </p>
 
 # Protein Toolkit
@@ -127,9 +127,11 @@ protein_toolkit/
 │   ├── sequence_props.py     # physicochemical descriptors + batch runner
 │   ├── fasta.py              # multi-record FASTA parser
 │   └── uniprot.py            # fetch a sequence by accession (stdlib only)
-├── gui/                       # Tkinter desktop interface
+├── gui/                      # Tkinter desktop interface
 │   └── app.py
-├── streamlit_app.py           # Streamlit web interface (reuses core/)
+├── streamlit_app.py          # Streamlit web interface (reuses core/)
+├── assets/
+│   └── logo.png
 ├── tests/
 │   ├── test_sequence_props.py
 │   ├── test_fasta.py
@@ -138,7 +140,6 @@ protein_toolkit/
 │   └── test_export.py
 ├── run.py
 ├── requirements.txt
-├── protein_toolkit_logo.png
 ├── LICENSE
 └── README.md
 ```
