@@ -1,25 +1,15 @@
 """
-core/sequence_props.py
-
 Sequence-based protein property calculators.
-
-This wraps Biopython's ProteinAnalysis engine behind explicit,
-documented functions so the biological meaning of each returned
-number is clear -- both for using this as a real tool and as a
-readable reference for what each descriptor represents.
-
 This module has no GUI dependencies, so it can be reused directly
 from a CLI, a notebook, a web app, or a test suite.
 """
 
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
-
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
-
 from core.fasta import parse_fasta
 
-STANDARD_AA = set("ACDEFGHIKLMNPQRSTVWY")
+set_AA = set("ACDEFGHIKLMNPQRSTVWY")
 
 # Atom counts (C, H, N, O, S) for each amino acid *residue* -- i.e. the
 # free amino acid minus one water molecule, which is what remains once
@@ -27,7 +17,7 @@ STANDARD_AA = set("ACDEFGHIKLMNPQRSTVWY")
 # sequence and adding one water back (for the free alpha-amino and
 # alpha-carboxyl groups at the two termini) gives the molecular formula
 # of the whole polypeptide.
-_RESIDUE_ATOMS: Dict[str, Tuple[int, int, int, int, int]] = {
+res_atoms: Dict[str, Tuple[int, int, int, int, int]] = {
     "A": (3, 5, 1, 1, 0),
     "R": (6, 12, 4, 1, 0),
     "N": (4, 6, 2, 2, 0),
@@ -50,8 +40,7 @@ _RESIDUE_ATOMS: Dict[str, Tuple[int, int, int, int, int]] = {
     "V": (5, 9, 1, 1, 0),
 }
 
-
-class MultipleRecordsError(ValueError):
+class MultiRecErr(ValueError):
     """
     Raised by calculate_properties() when the input holds more than one
     FASTA record. Single-sequence analysis would silently concatenate the
@@ -63,10 +52,8 @@ class MultipleRecordsError(ValueError):
     catch it.
     """
 
-
-def _count_fasta_headers(raw_sequence: str) -> int:
+def count_fasta_headers(raw_sequence: str) -> int:
     return sum(1 for line in raw_sequence.splitlines() if line.lstrip().startswith(">"))
-
 
 def clean_sequence(raw_sequence: str) -> Tuple[str, List[str]]:
     """
@@ -88,7 +75,7 @@ def clean_sequence(raw_sequence: str) -> Tuple[str, List[str]]:
     lines = [ln for ln in lines if not ln.startswith(">")]
     sequence = "".join(lines).upper().replace(" ", "")
 
-    non_standard = sorted(set(sequence) - STANDARD_AA)
+    non_standard = sorted(set(sequence) - set_AA)
     if non_standard:
         excluded_count = sum(sequence.count(ch) for ch in non_standard)
         warnings.append(
@@ -102,7 +89,6 @@ def clean_sequence(raw_sequence: str) -> Tuple[str, List[str]]:
             "sequence you entered."
         )
     return sequence, warnings
-
 
 @dataclass
 class SequenceProperties:
@@ -125,8 +111,7 @@ class SequenceProperties:
     amino_acid_percent: Dict[str, float]
     warnings: List[str] = field(default_factory=list)
 
-
-def _amino_acid_fractions(analysis: ProteinAnalysis) -> Dict[str, float]:
+def aa_fracs(analysis: ProteinAnalysis) -> Dict[str, float]:
     """
     Return amino acid composition as fractions (0-1) that sum to ~1.0.
 
@@ -141,7 +126,6 @@ def _amino_acid_fractions(analysis: ProteinAnalysis) -> Dict[str, float]:
         raw = analysis.amino_acids_percent
         return {aa: pct / 100.0 for aa, pct in raw.items()}
     return analysis.get_amino_acids_percent()
-
 
 def _aliphatic_index(sequence: str) -> float:
     """
@@ -165,12 +149,11 @@ def _aliphatic_index(sequence: str) -> float:
         + 3.9 * (mole_percent["I"] + mole_percent["L"])
     )
 
-
 def _molecular_formula(sequence: str) -> Tuple[Dict[str, int], str, int]:
     """
     Molecular formula of the whole polypeptide.
 
-    Sums the per-residue atom counts (C, H, N, O, S) from _RESIDUE_ATOMS
+    Sums the per-residue atom counts (C, H, N, O, S) from 
     and adds one water molecule (H2, O1) back for the free termini.
     Assumes all cysteines are reduced (disulfide formation would remove
     2 H per bond).
@@ -179,7 +162,7 @@ def _molecular_formula(sequence: str) -> Tuple[Dict[str, int], str, int]:
     """
     c = h = n = o = s = 0
     for aa in sequence:
-        d_c, d_h, d_n, d_o, d_s = _RESIDUE_ATOMS[aa]
+        d_c, d_h, d_n, d_o, d_s = [aa]
         c += d_c
         h += d_h
         n += d_n
@@ -194,7 +177,6 @@ def _molecular_formula(sequence: str) -> Tuple[Dict[str, int], str, int]:
         if atom_counts[element]
     )
     return atom_counts, formula, sum(atom_counts.values())
-
 
 def calculate_properties(raw_sequence: str) -> SequenceProperties:
     """
@@ -217,12 +199,12 @@ def calculate_properties(raw_sequence: str) -> SequenceProperties:
 
     Raises
     ------
-    MultipleRecordsError if the input contains more than one FASTA record.
+    MultiRecErr if the input contains more than one FASTA record.
     ValueError if no valid sequence content is provided.
     """
-    header_count = _count_fasta_headers(raw_sequence)
+    header_count = count_fasta_headers(raw_sequence)
     if header_count > 1:
-        raise MultipleRecordsError(
+        raise MultiRecErr(
             f"Input contains {header_count} FASTA records. This single-sequence "
             "view analyses one chain at a time; concatenating chains would give "
             "a wrong molecular weight and pI. Use batch analysis for multi-record "
@@ -233,7 +215,7 @@ def calculate_properties(raw_sequence: str) -> SequenceProperties:
     if not sequence:
         raise ValueError("No valid sequence provided.")
 
-    analyzable_sequence = "".join(ch for ch in sequence if ch in STANDARD_AA)
+    analyzable_sequence = "".join(ch for ch in sequence if ch in set_AA)
     if not analyzable_sequence:
         raise ValueError(
             "Sequence contains no standard amino acid letters (A-Y, "
@@ -271,10 +253,9 @@ def calculate_properties(raw_sequence: str) -> SequenceProperties:
             "turn": turn,
             "sheet": sheet,
         },
-        amino_acid_percent=_amino_acid_fractions(analysis),
+        amino_acid_percent=aa_fracs(analysis),
         warnings=warnings,
     )
-
 
 @dataclass
 class BatchResult:
@@ -290,7 +271,6 @@ class BatchResult:
     description: str
     properties: Optional[SequenceProperties]
     error: Optional[str]
-
 
 def calculate_batch(raw_text: str) -> List[BatchResult]:
     """
