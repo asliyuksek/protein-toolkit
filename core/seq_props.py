@@ -40,7 +40,7 @@ res_atoms: Dict[str, Tuple[int, int, int, int, int]] = {
     "V": (5, 9, 1, 1, 0),
 }
 
-class MultiRecErr(ValueError):
+class MultipleRecordsError(ValueError):
     """
     Raised by calculate_properties() when the input holds more than one
     FASTA record. Single-sequence analysis would silently concatenate the
@@ -199,12 +199,12 @@ def calculate_properties(raw_sequence: str) -> SequenceProperties:
 
     Raises
     ------
-    MultiRecErr if the input contains more than one FASTA record.
+    MultipleRecordsError if the input contains more than one FASTA record.
     ValueError if no valid sequence content is provided.
     """
     header_count = count_fasta_headers(raw_sequence)
     if header_count > 1:
-        raise MultiRecErr(
+        raise MultipleRecordsError(
             f"Input contains {header_count} FASTA records. This single-sequence "
             "view analyses one chain at a time; concatenating chains would give "
             "a wrong molecular weight and pI. Use batch analysis for multi-record "
