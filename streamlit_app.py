@@ -23,7 +23,7 @@ import altair as alt
 import pandas as pd
 import streamlit as st
 
-from core.sequence_props import (
+from core.seq_props import (
     MultipleRecordsError,
     SequenceProperties,
     calculate_batch,
