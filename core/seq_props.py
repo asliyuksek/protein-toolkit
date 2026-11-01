@@ -153,7 +153,7 @@ def _molecular_formula(sequence: str) -> Tuple[Dict[str, int], str, int]:
     """
     Molecular formula of the whole polypeptide.
 
-    Sums the per-residue atom counts (C, H, N, O, S) from 
+    Sums the per-residue atom counts (C, H, N, O, S) from ``res_atoms``
     and adds one water molecule (H2, O1) back for the free termini.
     Assumes all cysteines are reduced (disulfide formation would remove
     2 H per bond).
@@ -162,7 +162,7 @@ def _molecular_formula(sequence: str) -> Tuple[Dict[str, int], str, int]:
     """
     c = h = n = o = s = 0
     for aa in sequence:
-        d_c, d_h, d_n, d_o, d_s = [aa]
+        d_c, d_h, d_n, d_o, d_s = res_atoms[aa]
         c += d_c
         h += d_h
         n += d_n

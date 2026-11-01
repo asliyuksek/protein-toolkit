@@ -95,8 +95,8 @@ def _write_table(path: str, headers: list, rows: list) -> None:
     sheet.freeze_panes = "A2"
     workbook.save(path)
 
-from core.sequence_props import (
-    STANDARD_AA,
+from core.seq_props import (
+    set_AA,
     MultipleRecordsError,
     SequenceProperties,
     calculate_batch,
@@ -616,7 +616,7 @@ class ProteinToolkitApp(tk.Tk):
             seq, _ = clean_sequence(self.seq_text.get("1.0", "end"))
         except Exception:  # noqa: BLE001 - never let the counter break typing
             return
-        non_std = sum(1 for ch in seq if ch not in STANDARD_AA)
+        non_std = sum(1 for ch in seq if ch not in set_AA)
         if non_std:
             self.count_var.set(f"{len(seq)} residues · {non_std} non-standard")
         else:

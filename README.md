@@ -89,7 +89,7 @@ The `core/` package has no GUI dependencies, so it can be imported
 directly from a script, a notebook, or another tool.
 
 ```python
-from core.sequence_props import calculate_properties, calculate_batch
+from core.seq_props import calculate_properties, calculate_batch
 from core.uniprot import fetch_fasta
 
 # --- one sequence (raw text or a single-record FASTA string) ---
@@ -124,7 +124,7 @@ for that.
 ```
 protein_toolkit/
 ├── core/                     # calculation logic (no GUI dependencies)
-│   ├── sequence_props.py     # physicochemical descriptors + batch runner
+│   ├── seq_props.py          # physicochemical descriptors + batch runner
 │   ├── fasta.py              # multi-record FASTA parser
 │   └── uniprot.py            # fetch a sequence by accession (stdlib only)
 ├── gui/                      # Tkinter desktop interface

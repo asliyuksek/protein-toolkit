@@ -1,5 +1,5 @@
 """
-Tests for core.sequence_props.calculate_batch.
+Tests for core.seq_props.calculate_batch.
 
 Run with: python -m unittest discover -s tests
 """
@@ -10,7 +10,7 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from core.sequence_props import calculate_batch
+from core.seq_props import calculate_batch
 
 
 class TestCalculateBatch(unittest.TestCase):

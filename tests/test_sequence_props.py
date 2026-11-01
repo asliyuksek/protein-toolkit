@@ -1,5 +1,5 @@
 """
-Basic sanity tests for core.sequence_props.
+Basic sanity tests for core.seq_props.
 
 Run with: python -m unittest discover -s tests
 """
@@ -10,7 +10,7 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from core.sequence_props import (
+from core.seq_props import (
     MultipleRecordsError,
     calculate_properties,
     clean_sequence,
